@@ -2,7 +2,7 @@ from sys import argv
 import os
 import json
 
-# NYASCRIPT !!!
+# MICROSCRIPT
 
 config = json.load(open('config/config.json'))
 compileOptions = config['compile_options']
@@ -63,73 +63,73 @@ def translate(i, word, script, prefix=''):
         writeTabs = ''
         writeTabs = ''.join(["\t" for i in range(tabs)])
 
-        if word == 'OwO':
+        if word == 'Micro++':
             usePlusPlus = True
             return ['']
 
-        if word == 'UwU':
+        if word == 'MicroEx':
             useExtended = True
             return ['']
 
-        elif word == 'Nya':
+        elif word == '>':
             return [writeTabs, f'{prefix}cursor += 1\n']
 
-        elif word == 'nYA':
+        elif word == ']':
             tabs -= 1
             return ['']
 
-        elif word == 'nyA':
+        elif word == '<':
             return [writeTabs, f'{prefix}cursor -= 1\n']
 
-        elif word == 'NyA':
+        elif word == '+':
             return [writeTabs, f'{prefix}array[cursor] += 1\n']
 
-        elif word == 'nYa':
+        elif word == '-':
             return [writeTabs, f'{prefix}array[cursor] -= 1\n']
 
-        elif word == 'NYA':
+        elif word == 'printASCII':
             return [writeTabs, f'print(chr(array[{prefix}cursor]), end="")\n',]
 
-        elif word == 'nya':
+        elif word == ',':
             return [writeTabs, f'{prefix}array[{prefix}cursor] = ord(input()[0])\n']
         
-        elif word == 'NYa':
+        elif word == '[':
             tabs += 1
             return [writeTabs, f'{prefix}loopCursor[{tabs -1}] = {prefix}cursor\n',writeTabs, f'while {prefix}array[{prefix}loopCursor[{tabs-1}]]:\n']
 
-        elif word == 'nyan':
+        elif word == 'matToTemp':
             return [writeTabs, f'{prefix}temp = {prefix}array[{prefix}cursor]\n']
 
-        elif word == 'NYAN':
+        elif word == 'tempToMat':
             return [writeTabs, f'{prefix}array[{prefix}cursor] = {prefix}temp\n']
         
-        elif word == 'NyaN':
+        elif word == 'temp++':
             return [writeTabs, f'{prefix}temp += 1\n']
 
-        elif word == 'nYAn':
+        elif word == 'temp--':
             return [writeTabs, f'{prefix}temp -= 1\n']
 
-        elif word == 'NYAn':
+        elif word == 'temp++mat':
             return [writeTabs, f'{prefix}temp += {prefix}array[{prefix}cursor]\n']
 
-        elif word == 'nYAN':
+        elif word == 'temp--mat':
             return [writeTabs, f'{prefix}temp -= {prefix}array[{prefix}cursor]\n']
 
-        elif word == 'NyAN':
+        elif word == 'delTemp':
             return [writeTabs, f'{prefix}temp = 0\n']
 
         if useExtended:
-            if word == 'NYA+':
+            if word == 'printContent':
                 return [writeTabs, f'print(" ".join(str({prefix}array[{prefix}cursor]).split("\\\\^^")), end="")\n']
             if word == 'nya+':
                 return [writeTabs, f'{prefix}array[{prefix}cursor] = input()\n']
             if word.startswith('$') and not word.startswith('$->'):
                 try:
                     if usePlusPlus:
-                        if script[i + 1] == '^array':
+                        if script[i + 1] == '<[':
                             array = []
                             for l in script[i + 2:]:
-                                if l != 'array^':
+                                if l != ']>':
                                     array.append(l)
                                 else:
                                     break
@@ -138,13 +138,13 @@ def translate(i, word, script, prefix=''):
                             return [writeTabs, f'{word[1:]} = {script[i + 1][1:-1]}({script[i + 2]})\n']
                         elif script[i + 1] == '^+':
                             return [writeTabs, f'{word[1:]}.append{array[i + 2]}']
-                    if script[i + 1] == '.':
+                    if script[i + 1] == 'currentArrayPos':
                         return [writeTabs, f'{word[1:]} = {prefix}array[{prefix}cursor]\n']
-                    elif script[i + 1] == '^':
+                    elif script[i + 1] == 'temp':
                         return [writeTabs, f'{word[1:]} = {prefix}temp\n']
-                    elif script[i + 1] == '+':
+                    elif script[i + 1] == 'array++':
                         return [writeTabs, f'{word[1:]} += {prefix}array[{prefix}cursor]\n']
-                    elif script[i + 1] == '-':
+                    elif script[i + 1] == 'array--':
                         return [writeTabs, f'{word[1:]} -= {prefix}array[{prefix}cursor]\n']
                     else:
                         return [writeTabs, f'{word[1:]} = {script[i + 1]}\n']
@@ -153,38 +153,38 @@ def translate(i, word, script, prefix=''):
             if word.startswith('#') and not word.startswith('#->'):
                 return [writeTabs, f'{prefix}array[{prefix}cursor] = {word[1:]}\n']
 
-            if word == 'Nya?':
+            if word == '<?':
                 tabs += 1
                 inCondition = True
 
             if inCondition:
-                if word == 'gweater':
+                if word == '>>':
                     if ifAdded:
                         return [writeTabs[1:], f'elif {prefix}temp > {prefix}array[{prefix}cursor]:\n']
                     else:
                         return [writeTabs[1:], f'if {prefix}temp > {prefix}array[{prefix}cursor]:\n']
-                elif word == 'lower':
+                elif word == '<<':
                     if ifAdded:
                         return [writeTabs[1:], f'elif {prefix}temp < {prefix}array[{prefix}cursor]:\n']
                     else:
                         return [writeTabs[1:], f'if {prefix}temp < {prefix}array[{prefix}cursor]:\n']
-                if word == 'eqwal':
+                if word == '==':
                     if ifAdded:
                         return [writeTabs[1:], f'elif {prefix}temp == {prefix}array[{prefix}cursor]:\n']
                     else:
                         return [writeTabs[1:], f'if {prefix}temp == {prefix}array[{prefix}cursor]:\n']
-            elif word == '?Nya':
+            elif word == '?>':
                 tabs -= 1
                 inCondition = False
                 return ['']
 
-            if word == 'meow':
+            if word == 'func':
                 tabs += 1
                 funcName = script[i + 1]
                 funcArgs = []
-                if script[i + 2] == 'meOW':
+                if script[i + 2] == ';':
                     for l in script[i + 3:]:
-                        if l != 'MEow':
+                        if l != '{':
                             funcArgs.append(l)
                         else:
                             break
@@ -196,15 +196,15 @@ def translate(i, word, script, prefix=''):
                             f'global {prefix}array, {prefix}cursor, {prefix}temp\n']
                 return [writeTabs, f"def {funcName}({', '.join(funcArgs)}):\n", writeTabs + '\t',
                         f'global {prefix}array, {prefix}cursor, {prefix}temp\n']
-            elif word == 'MEOW':
+            elif word == '}':
                 tabs -= 1
                 return ['']
 
             if word.startswith('~'):
                 try:
                     if script[i + 2].startswith('°'):
-                        return [writeTabs, word[1:] + "(" + ', '.join(script[i + 1].split(',')).replace('.', f'{prefix}array[{prefix}cursor]')
-                    .replace('^', f'{prefix}temp').replace('a', f'int({prefix}array[{prefix}cursor])').replace('t', f'int({prefix}temp)') + ")\n"]
+                        return [writeTabs, word[1:] + "(" + ', '.join(script[i + 1].split(',')).replace('currentArrayPos', f'{prefix}array[{prefix}cursor]')
+                    .replace('temp', f'{prefix}temp').replace('intArrayPos', f'int({prefix}array[{prefix}cursor])').replace('intTemp', f'int({prefix}temp)') + ")\n"]
                     else:
                         return [writeTabs,f'{word[2:]}.{script[i + 1][1:]}()\n']
                 except IndexError:
@@ -212,21 +212,21 @@ def translate(i, word, script, prefix=''):
 
 
         if usePlusPlus:
-            if word == 'hewo!':
+            if word == 'importPython':
                 return [writeTabs, f'from {script[i + 1]} import *\n']
-            if word == "hewo":
+            if word == "import":
                 return [writeTabs, compileDependency(script[i + 1], 'c')]
             
-            if word == 'pywon':
+            if word == 'python':
                 return [writeTabs, f'exec(open("{script[i + 1]}").read())\n']
 
-            if word == 'ewawuate':
+            if word == 'eval':
                 return compileDependency(script[i + 1], 'e')
             
-            if word == 'NYA++':
+            if word == 'printAfter':
                 return [writeTabs, f'print(" ".join({script[i + 1]}.split("\^^")), end="")\n']
 
-            if word == 'Cwass':
+            if word == 'class':
                 inClass = True
                 tabs += 1
                 if script[i + 2] == 'extends':
